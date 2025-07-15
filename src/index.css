@@ -36,4 +36,26 @@ body {
   .filter-item {
     @apply flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors duration-150;
   }
+}
+
+/* Utilitaires responsive et mobile */
+@layer utilities {
+  /* Cache la scrollbar tout en gardant le scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Améliore le touch sur mobile */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  /* Smooth scroll pour une meilleure UX */
+  html {
+    scroll-behavior: smooth;
+  }
 } 

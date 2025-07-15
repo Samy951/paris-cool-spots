@@ -7,7 +7,13 @@ import {
   Accessibility,
   Droplets,
   TreePine,
-  Circle
+  Circle,
+  Waves,
+  Umbrella,
+  Activity,
+  Building,
+  BookOpen,
+  Snowflake
 } from 'lucide-react';
 import { CoolSpot } from '../types';
 
@@ -17,7 +23,7 @@ interface SpotCardProps {
 }
 
 const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
-  // Fonction pour obtenir l'icône selon le type
+  // Fonction pour obtenir l'icône selon le type avec focus "fraîcheur"
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'park':
@@ -25,13 +31,13 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
       case 'fountain':
         return <Droplets className="h-5 w-5" />;
       case 'activity':
-        return <Circle className="h-5 w-5" />;
+        return <Activity className="h-5 w-5" />;
       case 'pool':
-        return <Circle className="h-5 w-5" />;
+        return <Waves className="h-5 w-5" />;
       case 'library':
-        return <Circle className="h-5 w-5" />;
+        return <BookOpen className="h-5 w-5" />;
       case 'museum':
-        return <Circle className="h-5 w-5" />;
+        return <Building className="h-5 w-5" />;
       default:
         return <Circle className="h-5 w-5" />;
     }
@@ -141,6 +147,48 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
     return stars;
   };
 
+  // Fonction pour obtenir les badges de fraîcheur
+  const getCoolnessBadges = () => {
+    const badges = [];
+    
+    if (spot.hasWater) {
+      badges.push(
+        <div key="water" className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+          <Droplets className="h-3 w-3" />
+          <span>Fraîcheur</span>
+        </div>
+      );
+    }
+    
+    if (spot.hasShade) {
+      badges.push(
+        <div key="shade" className="flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
+          <Umbrella className="h-3 w-3" />
+          <span>Ombragé</span>
+        </div>
+      );
+    }
+    
+    if (spot.type === 'pool') {
+      badges.push(
+        <div key="pool" className="flex items-center gap-1 bg-cyan-100 text-cyan-700 px-2 py-1 rounded-full text-xs font-medium">
+          <Snowflake className="h-3 w-3" />
+          <span>Rafraîchissant</span>
+        </div>
+      );
+    }
+    
+    if (spot.priceRange === 'gratuit') {
+      badges.push(
+        <div key="free" className="flex items-center gap-1 bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-xs font-medium">
+          <span>Gratuit</span>
+        </div>
+      );
+    }
+    
+    return badges;
+  };
+
   if (viewMode === 'list') {
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
@@ -152,6 +200,14 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{spot.name}</h3>
+                
+                {/* Badges de fraîcheur proéminents */}
+                {getCoolnessBadges().length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                    {getCoolnessBadges()}
+                  </div>
+                )}
+                
                 <div className="flex items-center gap-2 mt-1">
                   <span className={`text-xs px-2 py-1 rounded-full ${getTypeColor(spot.type)}`}>
                     {getTypeLabel(spot.type)}
@@ -195,18 +251,6 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
                       <span>Accessible</span>
                     </div>
                   )}
-                  {spot.hasWater && (
-                    <div className="flex items-center gap-1 text-xs text-blue-600">
-                      <Droplets className="h-3 w-3" />
-                      <span>Point d'eau</span>
-                    </div>
-                  )}
-                  {spot.hasShade && (
-                    <div className="flex items-center gap-1 text-xs text-green-600">
-                      <TreePine className="h-3 w-3" />
-                      <span>Ombragé</span>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -240,6 +284,14 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
         </div>
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{spot.name}</h3>
+          
+          {/* Badges de fraîcheur proéminents */}
+          {getCoolnessBadges().length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2 mb-2">
+              {getCoolnessBadges()}
+            </div>
+          )}
+          
           <div className="flex items-center gap-2 mt-1">
             <span className={`text-xs px-2 py-1 rounded-full ${getTypeColor(spot.type)}`}>
               {getTypeLabel(spot.type)}
@@ -285,18 +337,6 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
             <div className="flex items-center gap-1 text-xs text-purple-600">
               <Accessibility className="h-3 w-3" />
               <span>Accessible</span>
-            </div>
-          )}
-          {spot.hasWater && (
-            <div className="flex items-center gap-1 text-xs text-blue-600">
-              <Droplets className="h-3 w-3" />
-              <span>Point d'eau</span>
-            </div>
-          )}
-          {spot.hasShade && (
-            <div className="flex items-center gap-1 text-xs text-green-600">
-              <TreePine className="h-3 w-3" />
-              <span>Ombragé</span>
             </div>
           )}
         </div>

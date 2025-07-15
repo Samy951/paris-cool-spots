@@ -4,7 +4,11 @@ import {
   Filter, 
   ChevronDown, 
   ChevronUp,
-  RotateCcw
+  RotateCcw,
+  Droplets,
+  Trees,
+  Waves,
+  Zap
 } from 'lucide-react';
 import { FilterOptions, SpotType, Arrondissement, PriceRange } from '../types';
 
@@ -48,6 +52,56 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       ? filters.types.filter(t => t !== type)
       : [...filters.types, type];
     onFilterChange({ types: newTypes });
+  };
+
+  // Presets contextuels pour les "cool spots"
+  const coolSpotPresets = [
+    {
+      id: 'refresh',
+      label: 'Se rafraîchir',
+      icon: <Droplets className="h-4 w-4" />,
+      description: 'Fontaines et points d\'eau',
+      filters: {
+        types: ['fountain' as SpotType],
+        withWater: true,
+        openOnly: true
+      }
+    },
+    {
+      id: 'relax',
+      label: 'Se détendre',
+      icon: <Trees className="h-4 w-4" />,
+      description: 'Parcs et espaces verts ombragés',
+      filters: {
+        types: ['park' as SpotType],
+        withShade: true,
+        priceRanges: ['gratuit' as PriceRange]
+      }
+    },
+    {
+      id: 'activities',
+      label: 'Activités fraîches',
+      icon: <Waves className="h-4 w-4" />,
+      description: 'Piscines et activités aquatiques',
+      filters: {
+        types: ['pool' as SpotType, 'activity' as SpotType],
+        openOnly: true
+      }
+    },
+    {
+      id: 'free',
+      label: 'Gratuit et frais',
+      icon: <Zap className="h-4 w-4" />,
+      description: 'Tous les spots gratuits',
+      filters: {
+        priceRanges: ['gratuit' as PriceRange],
+        openOnly: true
+      }
+    }
+  ];
+
+  const applyPreset = (preset: typeof coolSpotPresets[0]) => {
+    onFilterChange(preset.filters);
   };
 
   const handleArrondissementToggle = (arr: Arrondissement) => {
@@ -105,6 +159,28 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           <RotateCcw className="h-4 w-4 mr-1" />
           Réinitialiser
         </button>
+      </div>
+
+      {/* Presets contextuels "Cool Spots" */}
+      <div className="mb-6">
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Recherches populaires</h3>
+        <div className="grid grid-cols-2 gap-2">
+          {coolSpotPresets.map((preset) => (
+            <button
+              key={preset.id}
+              onClick={() => applyPreset(preset)}
+              className="p-3 bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 rounded-lg hover:from-purple-100 hover:to-blue-100 transition-colors text-left group"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <div className="text-purple-600 group-hover:text-purple-700">
+                  {preset.icon}
+                </div>
+                <span className="text-sm font-medium text-gray-900">{preset.label}</span>
+              </div>
+              <p className="text-xs text-gray-600">{preset.description}</p>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Recherche */}

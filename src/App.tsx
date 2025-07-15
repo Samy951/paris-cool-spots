@@ -7,16 +7,19 @@ import { usePagination } from './hooks/usePagination';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import FilterPanel from './components/FilterPanel';
+import MobileFilterDrawer from './components/MobileFilterDrawer';
 import SpotGrid from './components/SpotGrid';
 import StatsBar from './components/StatsBar';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
+import EmptyState from './components/EmptyState';
 
 function App() {
   // Utilisation des vraies APIs Paris Open Data via React Query
   const { data: spots = [], isLoading: loading, isError, error: queryError, refetch } = useAllParisSpots();
   const error = isError ? (queryError as Error)?.message || 'Erreur lors du chargement' : null;
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   
   // État des filtres
   const [filters, setFilters] = useState<FilterOptions>({
@@ -170,9 +173,9 @@ function App() {
 
       {/* Contenu principal */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Panneau de filtres */}
-          <div className="lg:col-span-1">
+        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+          {/* Panneau de filtres - masqué sur mobile */}
+          <div className="hidden lg:block lg:col-span-1">
             <FilterPanel
               filters={filters}
               onFilterChange={handleFilterChange}
@@ -188,47 +191,48 @@ function App() {
               stats={stats} 
               viewMode={viewMode}
               onViewModeChange={handleViewModeChange}
+              onMobileFilterToggle={() => setIsMobileFilterOpen(true)}
+              isMobileFilterOpen={isMobileFilterOpen}
             />
 
             {/* Grille de spots */}
             {loading ? (
               <LoadingSpinner />
             ) : filteredSpots.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-500 text-lg">
-                  Aucun spot ne correspond à vos critères
-                </div>
-                <button
-                  onClick={handleResetFilters}
-                  className="mt-4 btn-primary"
-                >
-                  Réinitialiser les filtres
-                </button>
-              </div>
+              <EmptyState 
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                onResetFilters={handleResetFilters}
+              />
             ) : (
               <>
                 <SpotGrid spots={pagination.data} viewMode={viewMode} />
                 
-                {/* Pagination Controls */}
+                {/* Pagination Controls - Optimisé mobile */}
                 {pagination.totalPages > 1 && (
-                  <div className="mt-8 flex justify-center items-center space-x-4">
+                  <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
                     <button
                       onClick={pagination.previousPage}
                       disabled={!pagination.hasPreviousPage}
-                      className="px-3 py-2 bg-white border rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-4 md:px-6 py-3 md:py-2 bg-white border rounded-lg text-sm md:text-sm font-medium text-gray-700 hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation"
                     >
                       ← Précédent
                     </button>
                     
-                    <span className="text-sm text-gray-700">
-                      Page {pagination.page} sur {pagination.totalPages} 
-                      ({pagination.totalItems} spots au total)
-                    </span>
+                    <div className="text-center">
+                      <span className="text-sm md:text-sm text-gray-700 font-medium">
+                        <span className="hidden sm:inline">Page </span>
+                        {pagination.page} / {pagination.totalPages}
+                      </span>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {pagination.totalItems} spots au total
+                      </div>
+                    </div>
                     
                     <button
                       onClick={pagination.nextPage}
                       disabled={!pagination.hasNextPage}
-                      className="px-3 py-2 bg-white border rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-4 md:px-6 py-3 md:py-2 bg-white border rounded-lg text-sm md:text-sm font-medium text-gray-700 hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation"
                     >
                       Suivant →
                     </button>
@@ -239,6 +243,16 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Mobile Filter Drawer */}
+      <MobileFilterDrawer
+        isOpen={isMobileFilterOpen}
+        onClose={() => setIsMobileFilterOpen(false)}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onResetFilters={handleResetFilters}
+        filterOptions={filterOptions}
+      />
     </div>
   );
 }
