@@ -5,6 +5,7 @@ import { useAllParisSpots } from './hooks/useParisData';
 import { useDebounce } from './hooks/useDebounce';
 import { usePagination } from './hooks/usePagination';
 import Header from './components/Header';
+import HeroSection from './components/HeroSection';
 import FilterPanel from './components/FilterPanel';
 import SpotGrid from './components/SpotGrid';
 import StatsBar from './components/StatsBar';
@@ -120,6 +121,31 @@ function App() {
     });
   };
 
+  const handleQuickFilter = (preset: 'refresh' | 'relax' | 'activities') => {
+    const presets = {
+      refresh: {
+        types: ['fountain' as const],
+        withWater: true,
+        searchQuery: ''
+      },
+      relax: {
+        types: ['park' as const],
+        withShade: true,
+        searchQuery: ''
+      },
+      activities: {
+        types: ['pool' as const, 'activity' as const],
+        searchQuery: ''
+      }
+    };
+
+    const presetFilters = presets[preset];
+    setFilters(prev => ({
+      ...prev,
+      ...presetFilters
+    }));
+  };
+
   const handleViewModeChange = (mode: 'grid' | 'list') => {
     setViewMode(mode);
   };
@@ -138,6 +164,9 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       {/* En-tête */}
       <Header />
+      
+      {/* Hero Section avec mission et quick actions */}
+      <HeroSection onQuickFilter={handleQuickFilter} />
 
       {/* Contenu principal */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
