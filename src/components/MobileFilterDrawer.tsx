@@ -8,6 +8,7 @@ interface MobileFilterDrawerProps {
   onClose: () => void;
   filters: FilterOptions;
   onFilterChange: (filters: Partial<FilterOptions>) => void;
+  onReplaceFilters?: (filters: FilterOptions) => void;
   onResetFilters: () => void;
   filterOptions: {
     types: Array<{ value: any; label: string; icon: string }>;
@@ -20,6 +21,7 @@ const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
   onClose,
   filters,
   onFilterChange,
+  onReplaceFilters,
   onResetFilters,
   filterOptions
 }) => {
@@ -76,6 +78,7 @@ const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
           <FilterPanel
             filters={filters}
             onFilterChange={onFilterChange}
+            onReplaceFilters={onReplaceFilters}
             onResetFilters={onResetFilters}
             filterOptions={filterOptions}
           />

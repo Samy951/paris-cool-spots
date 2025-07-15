@@ -111,6 +111,10 @@ function App() {
     setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
+  const handleReplaceFilters = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+  };
+
   const handleResetFilters = () => {
     setFilters({
       types: [],
@@ -125,28 +129,36 @@ function App() {
   };
 
   const handleQuickFilter = (preset: 'refresh' | 'relax' | 'activities') => {
+    // Réinitialisation complète des filtres pour chaque preset
+    const baseFilters = {
+      types: [],
+      arrondissements: [],
+      priceRanges: [],
+      openOnly: false,
+      accessibleOnly: false,
+      withShade: false,
+      withWater: false,
+      searchQuery: ''
+    };
+
     const presets = {
       refresh: {
+        ...baseFilters,
         types: ['fountain' as const],
-        withWater: true,
-        searchQuery: ''
+        withWater: true
       },
       relax: {
+        ...baseFilters,
         types: ['park' as const],
-        withShade: true,
-        searchQuery: ''
+        withShade: true
       },
       activities: {
-        types: ['pool' as const, 'activity' as const],
-        searchQuery: ''
+        ...baseFilters,
+        types: ['pool' as const, 'activity' as const]
       }
     };
 
-    const presetFilters = presets[preset];
-    setFilters(prev => ({
-      ...prev,
-      ...presetFilters
-    }));
+    setFilters(presets[preset]);
   };
 
   const handleViewModeChange = (mode: 'grid' | 'list') => {
@@ -179,6 +191,7 @@ function App() {
             <FilterPanel
               filters={filters}
               onFilterChange={handleFilterChange}
+              onReplaceFilters={handleReplaceFilters}
               onResetFilters={handleResetFilters}
               filterOptions={filterOptions}
             />
@@ -250,6 +263,7 @@ function App() {
         onClose={() => setIsMobileFilterOpen(false)}
         filters={filters}
         onFilterChange={handleFilterChange}
+        onReplaceFilters={handleReplaceFilters}
         onResetFilters={handleResetFilters}
         filterOptions={filterOptions}
       />

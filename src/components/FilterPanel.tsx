@@ -15,6 +15,7 @@ import { FilterOptions, SpotType, Arrondissement, PriceRange } from '../types';
 interface FilterPanelProps {
   filters: FilterOptions;
   onFilterChange: (filters: Partial<FilterOptions>) => void;
+  onReplaceFilters?: (filters: FilterOptions) => void;
   onResetFilters: () => void;
   filterOptions: {
     types: Array<{ value: SpotType; label: string; icon: string }>;
@@ -25,6 +26,7 @@ interface FilterPanelProps {
 const FilterPanel: React.FC<FilterPanelProps> = ({
   filters,
   onFilterChange,
+  onReplaceFilters,
   onResetFilters,
   filterOptions
 }) => {
@@ -101,7 +103,23 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   ];
 
   const applyPreset = (preset: typeof coolSpotPresets[0]) => {
-    onFilterChange(preset.filters);
+    // Remplace complètement les filtres par le preset
+    const completeFilters = {
+      types: preset.filters.types || [],
+      arrondissements: [],
+      priceRanges: preset.filters.priceRanges || [],
+      openOnly: preset.filters.openOnly || false,
+      accessibleOnly: false,
+      withShade: preset.filters.withShade || false,
+      withWater: preset.filters.withWater || false,
+      searchQuery: ''
+    };
+
+    if (onReplaceFilters) {
+      onReplaceFilters(completeFilters);
+    } else {
+      onFilterChange(completeFilters);
+    }
   };
 
   const handleArrondissementToggle = (arr: Arrondissement) => {
