@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchEspacesVerts, fetchFontaines, fetchActivites, RawEspaceVert, RawFontaine, RawActivite } from '../services/api';
-import { CoolSpot, SpotType, PriceRange, Arrondissement } from '../types';
+import { CoolSpot, PriceRange, Arrondissement } from '../types';
 
 // Fonctions de transformation des données hétérogènes vers notre modèle unifié
 const transformEspaceVert = (raw: RawEspaceVert, recordId: string): CoolSpot => {

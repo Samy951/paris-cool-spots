@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { CoolSpot, FilterOptions } from './types';
+import { FilterOptions } from './types';
 import { filterOptions } from './data/mockData';
 import { useAllParisSpots } from './hooks/useParisData';
+import { useDebounce } from './hooks/useDebounce';
+import { usePagination } from './hooks/usePagination';
 import Header from './components/Header';
 import FilterPanel from './components/FilterPanel';
 import SpotGrid from './components/SpotGrid';
@@ -28,6 +30,9 @@ function App() {
   });
 
   // Les données sont maintenant gérées par React Query
+
+  // Debounce de la recherche texte pour optimiser les performances
+  const debouncedSearchQuery = useDebounce(filters.searchQuery, 300);
 
   // Calcul des spots filtrés avec useMemo pour optimiser les performances
   const filteredSpots = useMemo(() => {
@@ -67,9 +72,9 @@ function App() {
         return false;
       }
 
-      // Filtre par recherche textuelle
-      if (filters.searchQuery.trim() !== '') {
-        const query = filters.searchQuery.toLowerCase();
+      // Filtre par recherche textuelle (avec debounce)
+      if (debouncedSearchQuery.trim() !== '') {
+        const query = debouncedSearchQuery.toLowerCase();
         const matchesName = spot.name.toLowerCase().includes(query);
         const matchesAddress = spot.address.toLowerCase().includes(query);
         const matchesDescription = spot.description.toLowerCase().includes(query);
@@ -84,7 +89,10 @@ function App() {
 
       return true;
     });
-  }, [spots, filters]);
+  }, [spots, filters, debouncedSearchQuery]);
+
+  // Pagination pour optimiser le rendu de grandes listes
+  const pagination = usePagination(filteredSpots, 24); // 24 spots par page (6x4 grid)
 
   // Statistiques calculées
   const stats = useMemo(() => ({
@@ -169,7 +177,35 @@ function App() {
                 </button>
               </div>
             ) : (
-              <SpotGrid spots={filteredSpots} viewMode={viewMode} />
+              <>
+                <SpotGrid spots={pagination.data} viewMode={viewMode} />
+                
+                {/* Pagination Controls */}
+                {pagination.totalPages > 1 && (
+                  <div className="mt-8 flex justify-center items-center space-x-4">
+                    <button
+                      onClick={pagination.previousPage}
+                      disabled={!pagination.hasPreviousPage}
+                      className="px-3 py-2 bg-white border rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      ← Précédent
+                    </button>
+                    
+                    <span className="text-sm text-gray-700">
+                      Page {pagination.page} sur {pagination.totalPages} 
+                      ({pagination.totalItems} spots au total)
+                    </span>
+                    
+                    <button
+                      onClick={pagination.nextPage}
+                      disabled={!pagination.hasNextPage}
+                      className="px-3 py-2 bg-white border rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Suivant →
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
