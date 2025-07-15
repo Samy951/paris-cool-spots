@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { CoolSpot, FilterOptions } from './types';
-import { mockSpots, filterOptions } from './data/mockData';
+import { filterOptions } from './data/mockData';
+import { useAllParisSpots } from './hooks/useParisData';
 import Header from './components/Header';
 import FilterPanel from './components/FilterPanel';
 import SpotGrid from './components/SpotGrid';
@@ -9,10 +10,9 @@ import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 
 function App() {
-  // État global de l'application
-  const [spots] = useState<CoolSpot[]>(mockSpots);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // Utilisation des vraies APIs Paris Open Data via React Query
+  const { data: spots = [], isLoading: loading, isError, error: queryError, refetch } = useAllParisSpots();
+  const error = isError ? (queryError as Error)?.message || 'Erreur lors du chargement' : null;
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   
   // État des filtres
@@ -27,14 +27,7 @@ function App() {
     searchQuery: ''
   });
 
-  // Simulation du chargement initial
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  // Les données sont maintenant gérées par React Query
 
   // Calcul des spots filtrés avec useMemo pour optimiser les performances
   const filteredSpots = useMemo(() => {
@@ -128,7 +121,7 @@ function App() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <ErrorMessage message={error} onRetry={() => setError(null)} />
+        <ErrorMessage message={error} onRetry={() => refetch()} />
       </div>
     );
   }
