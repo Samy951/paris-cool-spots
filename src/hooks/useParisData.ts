@@ -149,8 +149,8 @@ const transformEspaceVert = (raw: RawEspaceVert, recordId: string): CoolSpot => 
     hasShade: true,
     hasWater,
     coordinates: {
-      lat: raw.geom_x_y[0],
-      lng: raw.geom_x_y[1],
+      lat: raw.geom_x_y?.[0] || 48.8566,
+      lng: raw.geom_x_y?.[1] || 2.3522,
     },
   };
   
@@ -180,8 +180,8 @@ const transformFontaine = (raw: RawFontaine, recordId: string): CoolSpot => {
     hasShade: false,
     hasWater: true,
     coordinates: {
-      lat: raw.geo_point_2d[0],
-      lng: raw.geo_point_2d[1],
+      lat: raw.geo_point_2d?.[0] || 48.8566,
+      lng: raw.geo_point_2d?.[1] || 2.3522,
     },
   };
   
@@ -219,8 +219,8 @@ const transformActivite = (raw: RawActivite, recordId: string): CoolSpot => {
     hasShade,
     hasWater,
     coordinates: {
-      lat: raw.lat_lon[0] || 48.8566,
-      lng: raw.lat_lon[1] || 2.3522,
+      lat: raw.lat_lon?.[0] || 48.8566,
+      lng: raw.lat_lon?.[1] || 2.3522,
     },
   };
   
