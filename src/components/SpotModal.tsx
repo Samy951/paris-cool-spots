@@ -257,9 +257,13 @@ const SpotModal: React.FC<SpotModalProps> = ({ spot, isOpen, onClose }) => {
           {/* Description */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-            <p className="text-gray-600 leading-relaxed">
-              {spot.description}
-            </p>
+            <div className="text-gray-600 leading-relaxed space-y-2">
+              {spot.description.split('\n').filter(line => line.trim()).map((paragraph, index) => (
+                <p key={index} className="text-sm">
+                  {paragraph.trim()}
+                </p>
+              ))}
+            </div>
           </div>
 
           {/* Informations pratiques */}

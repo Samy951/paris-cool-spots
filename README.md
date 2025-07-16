@@ -201,14 +201,7 @@ L'application sera accessible sur `http://localhost:3000`
    - Design system cohérent (#5f259f, Nexa)
    - Interactions fluides et modernes
 
-## 📞 Contact & Démo
 
-**Développé par** : [Votre nom]  
-**Email** : [Votre email]  
-**LinkedIn** : [Votre profil]
-
-**Temps de développement** : 5 jours  
-**Prêt pour démo live** ✅
 
 ---
 
