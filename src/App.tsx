@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { FilterOptions, CoolSpot } from './types';
-import { filterOptions } from './data/mockData';
+import { filterOptions } from './data/filterConfig';
 import { useAllParisSpots } from './hooks/useParisData';
 import { useDebounce } from './hooks/useDebounce';
 import { usePagination } from './hooks/usePagination';

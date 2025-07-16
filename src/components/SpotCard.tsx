@@ -3,7 +3,6 @@ import {
   MapPin, 
   Clock, 
   DollarSign, 
-  Star, 
   Accessibility,
   Droplets,
   TreePine,
@@ -121,33 +120,7 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode, onSpotClick }) => {
     }
   };
 
-  // Générer les étoiles pour le rating
-  const renderStars = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
 
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-      );
-    }
-
-    if (hasHalfStar) {
-      stars.push(
-        <Star key="half" className="h-4 w-4 fill-yellow-400 text-yellow-400 opacity-50" />
-      );
-    }
-
-    const remainingStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < remainingStars; i++) {
-      stars.push(
-        <Star key={`empty-${i}`} className="h-4 w-4 text-gray-300" />
-      );
-    }
-
-    return stars;
-  };
 
   // Fonction pour obtenir les badges de fraîcheur
   const getCoolnessBadges = () => {
@@ -239,10 +212,7 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode, onSpotClick }) => {
                     {spot.isOpen ? 'Ouvert' : 'Fermé'}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 mb-2">
-                  {renderStars(spot.rating)}
-                  <span className="text-sm text-gray-600 ml-2">({spot.rating})</span>
-                </div>
+
               </div>
 
               <div>
@@ -343,10 +313,7 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode, onSpotClick }) => {
           {spot.description}
         </p>
 
-        <div className="flex items-center gap-1 mb-3">
-          {renderStars(spot.rating)}
-          <span className="text-sm text-gray-600 ml-2">({spot.rating})</span>
-        </div>
+
 
         <div className="flex flex-wrap gap-2 mb-3">
           {spot.accessibility && (

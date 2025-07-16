@@ -3,7 +3,6 @@ import {
   X, 
   MapPin, 
   Clock, 
-  Star, 
   Accessibility,
   Navigation,
   Thermometer,
@@ -109,33 +108,7 @@ const SpotModal: React.FC<SpotModalProps> = ({ spot, isOpen, onClose }) => {
     return badges;
   };
 
-  // Générer les étoiles pour le rating
-  const renderStars = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
 
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-      );
-    }
-
-    if (hasHalfStar) {
-      stars.push(
-        <Star key="half" className="h-5 w-5 fill-yellow-400 text-yellow-400 opacity-50" />
-      );
-    }
-
-    const remainingStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < remainingStars; i++) {
-      stars.push(
-        <Star key={`empty-${i}`} className="h-5 w-5 text-gray-300" />
-      );
-    }
-
-    return stars;
-  };
 
   const getPriceLabel = (priceRange: string) => {
     switch (priceRange) {
@@ -287,17 +260,17 @@ const SpotModal: React.FC<SpotModalProps> = ({ spot, isOpen, onClose }) => {
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-3">⭐ Évaluation</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-3">♿ Accessibilité</h4>
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  {renderStars(spot.rating)}
-                  <span className="text-sm text-gray-600 ml-1">({spot.rating}/5)</span>
-                </div>
-                
                 {spot.accessibility && (
                   <div className="flex items-center gap-2 text-sm text-purple-600">
                     <Accessibility className="h-4 w-4" />
                     <span>Accessible PMR</span>
+                  </div>
+                )}
+                {!spot.accessibility && (
+                  <div className="text-sm text-gray-500">
+                    <span>Informations d'accessibilité non disponibles</span>
                   </div>
                 )}
               </div>

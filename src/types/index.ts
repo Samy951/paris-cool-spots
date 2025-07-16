@@ -20,7 +20,6 @@ export interface CoolSpot {
   priceRange: PriceRange;
   isOpen: boolean;
   openingHours: string;
-  rating: number;
   features: string[];
   accessibility: boolean;
   hasShade: boolean;

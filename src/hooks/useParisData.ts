@@ -34,6 +34,8 @@ const cleanHtmlDescription = (htmlText: string): string => {
   return cleanText;
 };
 
+
+
 // Fonctions utilitaires pour analyser les activités
 const detectActivityType = (title: string, description: string = '', leadText: string = ''): SpotType => {
   const text = `${title} ${description} ${leadText}`.toLowerCase();
@@ -141,7 +143,7 @@ const transformEspaceVert = (raw: RawEspaceVert, recordId: string): CoolSpot => 
     priceRange: 'gratuit',
     isOpen: true,
     openingHours: 'Variable selon la saison',
-    rating: 4.0,
+
     features,
     accessibility: true,
     hasShade: true,
@@ -159,17 +161,20 @@ const transformFontaine = (raw: RawFontaine, recordId: string): CoolSpot => {
   const commune = raw.commune || '';
   const arrondissement = extractArrondissementFromCommune(commune);
   
+  const name = `Fontaine - ${raw.voie}`;
+  const isOpen = raw.dispo === 'OUI';
+  
   const coolSpot: CoolSpot = {
     id: recordId,
-    name: `Fontaine - ${raw.voie}`,
+    name,
     type: 'fountain',
     arrondissement,
     address: `${raw.voie}, ${commune}`,
     description: `${raw.type_objet} - ${raw.modele}`,
     priceRange: 'gratuit',
-    isOpen: raw.dispo === 'OUI',
+    isOpen,
     openingHours: '24h/24',
-    rating: 4.5,
+
     features: ['Eau potable', 'Fontaine publique'],
     accessibility: true,
     hasShade: false,
@@ -208,7 +213,7 @@ const transformActivite = (raw: RawActivite, recordId: string): CoolSpot => {
     priceRange,
     isOpen: true,
     openingHours: 'Voir détails',
-    rating: 4.2,
+
     features,
     accessibility: true,
     hasShade,

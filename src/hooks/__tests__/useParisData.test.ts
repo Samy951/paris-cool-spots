@@ -108,4 +108,6 @@ describe('Activity Features Generation', () => {
     expect(detectActivityType('Musée d\'art moderne')).toBe('museum');
     expect(detectActivityType('Bibliothèque numérique')).toBe('library');
   });
-}); 
+});
+
+ 
