@@ -9,7 +9,7 @@ export default function HeroSection({ onQuickFilter }: HeroSectionProps) {
   return (
     <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-8 md:py-12 px-4 md:px-6">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4" style={{ fontFamily: 'Nexa, sans-serif' }}>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
           🌡️ Il fait chaud à Paris ?
         </h1>
         <p className="text-lg md:text-xl lg:text-2xl mb-2 opacity-90">

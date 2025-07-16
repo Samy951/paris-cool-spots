@@ -11,7 +11,17 @@ module.exports = {
         'primary-dark': '#4c1d95',
       },
       fontFamily: {
-        'nexa': ['Nexa', 'sans-serif'],
+        'sans': ['Nexa', 'Inter', 'sans-serif'], // Police par défaut
+        'nexa': ['Nexa', 'Inter', 'sans-serif'], // Alias si besoin
+      },
+      fontWeight: {
+        'thin': '100',      // Nexa Thin
+        'light': '300',     // Nexa Light  
+        'normal': '400',    // Nexa Book
+        'medium': '500',    // Nexa Regular
+        'bold': '700',      // Nexa Bold
+        'heavy': '800',     // Nexa Heavy
+        'black': '900',     // Nexa Black
       },
     },
   },

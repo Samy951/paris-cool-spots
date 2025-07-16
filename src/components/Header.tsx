@@ -11,7 +11,7 @@ const Header: React.FC = () => {
             <div className="flex-shrink-0 flex items-center">
               <Thermometer className="h-6 w-6 sm:h-8 sm:w-8 text-primary mr-2 sm:mr-3" />
               <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900 font-nexa truncate">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
                   Paris Cool Spots
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">
