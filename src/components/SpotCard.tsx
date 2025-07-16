@@ -13,16 +13,18 @@ import {
   Activity,
   Building,
   BookOpen,
-  Snowflake
+  Snowflake,
+  Eye
 } from 'lucide-react';
 import { CoolSpot } from '../types';
 
 interface SpotCardProps {
   spot: CoolSpot;
   viewMode: 'grid' | 'list';
+  onSpotClick?: (spot: CoolSpot) => void;
 }
 
-const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
+const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode, onSpotClick }) => {
   // Fonction pour obtenir l'icône selon le type avec focus "fraîcheur"
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -191,7 +193,10 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
 
   if (viewMode === 'list') {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+      <div 
+        className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer hover:border-primary/20"
+        onClick={() => onSpotClick?.(spot)}
+      >
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
@@ -269,6 +274,14 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
                 </div>
               </div>
             )}
+
+            {/* Indicateur cliquable */}
+            <div className="mt-4 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-center text-xs text-primary hover:text-primary-dark transition-colors">
+                <Eye className="h-3 w-3 mr-1" />
+                <span>Cliquer pour plus de détails</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -277,7 +290,10 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
 
   // Mode grid
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow h-full flex flex-col">
+    <div 
+      className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow h-full flex flex-col cursor-pointer hover:border-primary/20"
+      onClick={() => onSpotClick?.(spot)}
+    >
       <div className="flex items-center gap-3 mb-4">
         <div className={`p-2 rounded-lg ${getTypeColor(spot.type)}`}>
           {getTypeIcon(spot.type)}
@@ -343,7 +359,7 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
       </div>
 
       {spot.features.length > 0 && (
-        <div className="mt-auto pt-4 border-t border-gray-100">
+        <div className="pt-4 border-t border-gray-100">
           <div className="flex flex-wrap gap-1">
             {spot.features.slice(0, 3).map((feature, index) => (
               <span
@@ -361,6 +377,14 @@ const SpotCard: React.FC<SpotCardProps> = ({ spot, viewMode }) => {
           </div>
         </div>
       )}
+
+      {/* Indicateur cliquable */}
+      <div className="mt-auto pt-3 border-t border-gray-100">
+        <div className="flex items-center justify-center text-xs text-primary hover:text-primary-dark transition-colors">
+          <Eye className="h-3 w-3 mr-1" />
+          <span>Voir détails</span>
+        </div>
+      </div>
     </div>
   );
 };

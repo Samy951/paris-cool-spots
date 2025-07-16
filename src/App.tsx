@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { FilterOptions } from './types';
+import { FilterOptions, CoolSpot } from './types';
 import { filterOptions } from './data/mockData';
 import { useAllParisSpots } from './hooks/useParisData';
 import { useDebounce } from './hooks/useDebounce';
@@ -13,6 +13,7 @@ import StatsBar from './components/StatsBar';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import EmptyState from './components/EmptyState';
+import SpotModal from './components/SpotModal';
 
 function App() {
   // Utilisation des vraies APIs Paris Open Data via React Query
@@ -20,6 +21,8 @@ function App() {
   const error = isError ? (queryError as Error)?.message || 'Erreur lors du chargement' : null;
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [selectedSpot, setSelectedSpot] = useState<CoolSpot | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // État des filtres
   const [filters, setFilters] = useState<FilterOptions>({
@@ -165,6 +168,16 @@ function App() {
     setViewMode(mode);
   };
 
+  const handleSpotClick = (spot: CoolSpot) => {
+    setSelectedSpot(spot);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedSpot(null);
+  };
+
   // Affichage des erreurs
   if (error) {
     return (
@@ -219,7 +232,7 @@ function App() {
               />
             ) : (
               <>
-                <SpotGrid spots={pagination.data} viewMode={viewMode} />
+                <SpotGrid spots={pagination.data} viewMode={viewMode} onSpotClick={handleSpotClick} />
                 
                 {/* Pagination Controls - Optimisé mobile */}
                 {pagination.totalPages > 1 && (
@@ -253,12 +266,12 @@ function App() {
                 )}
               </>
             )}
-          </div>
+                    </div>
         </div>
       </main>
 
       {/* Mobile Filter Drawer */}
-      <MobileFilterDrawer
+      <MobileFilterDrawer 
         isOpen={isMobileFilterOpen}
         onClose={() => setIsMobileFilterOpen(false)}
         filters={filters}
@@ -267,6 +280,15 @@ function App() {
         onResetFilters={handleResetFilters}
         filterOptions={filterOptions}
       />
+
+      {/* Spot Detail Modal */}
+      {selectedSpot && (
+        <SpotModal
+          spot={selectedSpot}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }
